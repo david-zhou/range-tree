@@ -1,5 +1,4 @@
 import random, math, time
-# import matplotlib.pyplot as plt
 from mpl_toolkits.mplot3d import Axes3D
 
 import matplotlib
@@ -12,7 +11,6 @@ maxRange = 1000
 
 class Node:
     def __init__(self, data, currentDimension = 1):
-        # self.currentDimension = currentDimension
         self.subtree = None
         self.data = data
         self.parent = None
@@ -160,11 +158,8 @@ def searchKDims(ranges, tree, dimensions):
             temp = actualTree
             if k != 0:
                 actualTree = actualTree.subtree
-            # print("exploring node {} and range {} in dimension {}".format(actualTree, ranges[k], k))
             lowerPath = actualTree.search(ranges[k][0], k)
             upperPath = actualTree.search(ranges[k][1], k)
-            # print("lowerPath before split = {}".format(lowerPath))
-#             print("upperPath before split = {}".format(upperPath))
             splitIndex = findSplitNode(lowerPath, upperPath)
             splitNode = actualTree
             blackNodes = []
@@ -175,37 +170,19 @@ def searchKDims(ranges, tree, dimensions):
                     splitNode = splitNode.right
             if lowerPath == upperPath:
                 if splitNode.data[k] <= ranges[k][1] and splitNode.data[k] >= ranges[k][0]:
-                    # print("11111111111111         {} found by {} in dimension {}".format(splitNode, temp, k))
                     blackNodes = [splitNode]
             else:
                 lowerPath = lowerPath[(splitIndex + 1):]
                 upperPath = upperPath[(splitIndex + 1):]
-                # print("lowerPath after split = {}".format(lowerPath))
-#                 print("upperPath after split = {}".format(upperPath))
-                # if len(lowerPath) == 0 and len(upperPath) == 0:
-#                     if splitNode.data[k] <= ranges[k][1] and splitNode.data[k] >= ranges[k][0]:
-#                         print("22222222222       {} found by {} in dimension {}".format(splitNode, temp, k))
-#                         blackNodes = [splitNode]
-#                 else:
                 blackNodes1 = splitNode.searchLower(ranges[k][0], k, lowerPath)
                 blackNodes2 = splitNode.searchUpper(ranges[k][1], k, upperPath)
-                # print("blackNodes1 = {}".format(blackNodes1))
-#                 print("blackNodes2 = {}".format(blackNodes2))
                 blackNodes = list(set(blackNodes1) | set(blackNodes2))
             for bn in blackNodes:
-                # print("                        {} found by {} in dimension {}".format(bn, temp, k))
                 blackNodesByDimension[k+1].append(bn)
-    # for k in range(dimensions):
-        #print("Dimension {} has nodes: ".format(k))
-        # for nodes in blackNodesByDimension[k]:
-            # print(nodes)
-    #print("-------------------")
     finalNodes = []
     for bn in blackNodesByDimension[dimensions]:
-        #print("bn = {}".format(bn))
         leaves = bn.getLeaves()
         for l in leaves:
-            # print("l = {}".format(l))
             finalNodes.append(l)
     return finalNodes
 
@@ -270,18 +247,6 @@ if dimension == 1:
     ar = createRandomPoints(n, dimension, 1)
 else:
     ar = createRandomPoints(n, dimension)
-#ar = [[1, 2], [2, 12], [3, 9], [4, 7], [5, 11], [6, 4], [7, 3], [8, 1], [9, 5], [10, 8], [11, 10], [12, 6], [13, 13]]
-
-#print(ar)
-# if dimension <= 2:
-#     plotPoints(ar)
-# elif dimension == 3:
-#     fig = plt.figure()
-#     ax = fig.add_subplot(111, projection='3d')
-#     plotPoints3d(ar)
-#ar = [[1, 2], [2, 12], [3, 9], [4, 7], [5, 11], [6, 4], [7, 3], [8, 1], [9, 5], [10, 8], [11, 10], [12, 6], [13, 13]]
-
-# plt.show()
 
 startTime = time.time()
 #dimension = 2
@@ -296,21 +261,6 @@ endTime = time.time()
 
 print("Tiempo de construcción del arbol: {} ".format(endTime - startTime))
 
-# print("[7, 3]")
-# print(tree.right.left.getLeaves())
-# print(tree.right.left.subtree.getLeaves())
-# print("[3, 9]")
-# print(tree.left.left.right.right.getLeaves())
-# print(tree.left.left.right.right.subtree.getLeaves())
-# print("[10, 8]")
-# print(tree.right.right.left.getLeaves())
-# print(tree.right.right.left.subtree.getLeaves())
-# print("[4, 7]")
-# print(tree.left.right.getLeaves())
-# print(tree.left.right.subtree.getLeaves())
-# print("[12, 6]")
-# print(tree.right.right.right.left.getLeaves())
-# print(tree.right.right.right.left.subtree.getLeaves())
 
 while True:
     if dimension <= 2:
